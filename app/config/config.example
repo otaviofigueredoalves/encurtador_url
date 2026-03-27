@@ -3,9 +3,9 @@ return [
     'domain' => "localhost:8000/",
     'database' => [
         'host' => 'localhost',
-        'dbname' => 'encurtador_db',
-        'user' => 'root',
-        'pass' => 'admin',
+        'dbname' => '',
+        'user' => '',
+        'pass' => '',
         'charset' => 'utf8mb4'
     ]
 ];
