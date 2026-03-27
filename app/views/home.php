@@ -12,10 +12,10 @@
         <input type="text" name="url_input" id="url_input">
         <button type="submit">Encurtar URL</button>
     </form>
-
-    <h2>URL PRONTA: </h2>
-    <p><strong>URL: </strong><?= config('domain').$code ?></p>
-    <!-- <?php var_dump($dados) ?> -->
-
+    <?php if(!empty($code)): ?>
+        <h2>URL PRONTA: </h2>
+        <p><strong>URL: </strong><?= config('domain').$code ?></p>
+    <?php endif ?>
+    
 </body>
 </html>
