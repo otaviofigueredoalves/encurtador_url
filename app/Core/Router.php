@@ -10,6 +10,11 @@ class Router
     public function dispatch($url)
     {
         try{
+            $request = new Request();
+            if($request->method() === 'POST' && empty($request->input('url_input'))){
+                $this->httpError('notFound');
+                exit;
+            }
             $url = trim($url,'/');
             $parts = $url ? explode('/',$url) : [];
             // dd($parts);

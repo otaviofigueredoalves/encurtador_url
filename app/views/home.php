@@ -12,10 +12,32 @@
         <input type="text" name="url_input" id="url_input">
         <button type="submit">Encurtar URL</button>
     </form>
-    <?php if(!empty($code)): ?>
+    <?php if(!empty($view_data['url_simplify'])): ?>
         <h2>URL PRONTA: </h2>
-        <p><strong>URL: </strong><?= config('domain').$code ?></p>
+        <p><strong>URL: </strong><?= config('domain').$view_data['url_simplify']['code'] ?></p>
     <?php endif ?>
+    <h2>Lista de URLs</h2>
+
+    <?php if(!empty($view_data['urls_list'])): ?>
+
+        <?php foreach($view_data['urls_list'] as $dado): ?>
+            <ul>
+                <li><?= config('domain').$dado['code'] ?></li>
+            </ul>
+        <?php endforeach; ?>
+
+    <?php elseif(!empty($view_data)): ?>
+
+        <?php foreach($view_data as $dado): ?>
+            <ul>
+                <li><?= config('domain').$dado['code'] ?></li>
+            </ul>
+        <?php endforeach; ?>
+
+    <?php else: ?>
+        <p style="color: red">Nenhuma URL encontrada</p>
+    <?php endif; ?>
+
     
 </body>
 </html>

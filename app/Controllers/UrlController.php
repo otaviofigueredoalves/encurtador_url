@@ -9,9 +9,8 @@ class UrlController extends Controller
 {
     public function convert($code_url = '')
     {
-        $dados = [];
+        $model = new UrlModel();
         if(!empty($code_url)){
-            $model = new UrlModel();
             $dados = $model->getUrl($code_url);
             if(!empty($dados)){
                 $urlDestino = $dados['url'];
@@ -28,10 +27,15 @@ class UrlController extends Controller
             $url = $request->input('url_input');
             $code = $this->generateRandomCode();
             // dd($code);
-            $model = new UrlModel();
             $model->setUrl($url, $code);
-            $dados = $model->getUrl($code);
+            $dados = [
+                'url_simplify' => $model->getUrl($code),
+                'urls_list' => $model->listAllUrls()
+            ];
             
+        }
+        if(empty($dados)){
+            $dados = $model->listAllUrls();
         }
 
         $this->view('home',$dados);

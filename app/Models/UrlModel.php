@@ -21,13 +21,15 @@ class UrlModel extends Model
         ];
         // dd($params);
         if($this->db->query($sql, $params)){
-            $this->getUrl($code);
+            return $this->getUrl($code);
         }
         return;
     }
 
-    public function listUrl($code)
+    public function listAllUrls()
     {
-
+        $sql = "SELECT code FROM url_links";
+        $params = [];
+        return $this->db->fetchAll($sql, $params);
     }
 }
