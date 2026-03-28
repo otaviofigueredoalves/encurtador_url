@@ -4,41 +4,53 @@ namespace App\Dev\Controllers;
 use App\Dev\Core\Controller;
 use App\Dev\Core\Request;
 use App\Dev\Models\UrlModel;
+use Exception;
 
 class UrlController extends Controller
 {
-    public function convert($code_url = '')
+    protected $UrlModel;
+    public function __construct()
     {
-        $model = new UrlModel();
-        if(!empty($code_url)){
-            $dados = $model->getUrl($code_url);
-            if(!empty($dados)){
-                $urlDestino = $dados['url'];
-                // dd($urlDestino);
-                Header("Location:".$urlDestino, true, 301);
-                exit;
-            } else {
-                return;
-            }
-        }
+        $this->UrlModel = new UrlModel();
+    }
+
+    public function index($code = [])
+    {
+            // dd($code);
+        $dados = [
+            'url_simplify' => $this->UrlModel->getUrl($code),
+            'urls_list' => $this->UrlModel->listAllUrls()
+        ];
+        // dd($dados);
+        $this->view('home',$dados);   
+    }
+    public function convert()
+    {
         $request = new Request();
         
-        if($request->method() === 'POST'){
+        if($request->method() === 'POST' && !empty($request->input('url_input'))){
             $url = $request->input('url_input');
             $code = $this->generateRandomCode();
-            // dd($code);
-            $model->setUrl($url, $code);
-            $dados = [
-                'url_simplify' => $model->getUrl($code),
-                'urls_list' => $model->listAllUrls()
-            ];
-            
-        }
-        if(empty($dados)){
-            $dados = $model->listAllUrls();
+            $this->UrlModel->setUrl($url, $code);
+            $this->index($code);
+        } else {
+            throw new Exception("Problema no método convert()");
         }
 
-        $this->view('home',$dados);
+        $this->index();
+    }
+
+    public function redirect($url)
+    {
+        $data = $this->UrlModel->getUrl($url); 
+
+        if(!empty($data)){
+            $url_destino = $data['url']; 
+            Header("Location:".$url_destino, true, 301);
+            exit;
+        } else {
+           return false;
+        }
     }
 
     private function generateRandomCode($tamanho = 6)

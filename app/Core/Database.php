@@ -1,11 +1,10 @@
 <?php
 namespace App\Dev\Core;
 
-use Exception;
-
 class Database
 {
     private $connection = null;
+    private $rowCountStmt;
     private static $instance = null;
     private function __construct()
     {
@@ -52,16 +51,18 @@ class Database
         try {
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($params);
+            $this->rowCountStmt = $stmt;
             return $stmt;
         } catch (\PDOException $e){
             throw new \Exception("Erro ao consultar o DB: ". $e->getMessage());
         }
     }
 
-    public function fetch($sql, $params = []):array
+    public function fetch($sql, $params = []): ?array
     {
         $stmt = $this->query($sql,$params);
-        return $stmt->fetch();
+        $result = $stmt->fetch();
+        return $result?:null;
     }
     public function fetchAll($sql, $params = []):array
     {
@@ -79,7 +80,7 @@ class Database
     }
     public function rowCount() : int
     {
-        return $this->connection->rowCount();
+        return $this->rowCountStmt ? $this->rowCountStmt->rowCount() : 0;
     }
 
 }

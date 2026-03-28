@@ -5,6 +5,12 @@ use App\Dev\Core\Model;
 
 class UrlModel extends Model
 {
+    private $domain;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->domain = config('domain');
+    }
     public function getUrl($code)
     {
         $sql = "SELECT * FROM url_links WHERE code = :code";
@@ -14,21 +20,33 @@ class UrlModel extends Model
 
     public function setUrl($url, $code)
     {
-        $sql = "INSERT INTO url_links (code, url) VALUES (:code, :url)";
+        $sql = "INSERT INTO url_links (code, url, domain) VALUES (:code, :url, :domain)";        
         $params = [
             'code' => $code,
             'url' => $url,
+            'domain' => $this->domain
         ];
         // dd($params);
         if($this->db->query($sql, $params)){
-            return $this->getUrl($code);
+            if($this->checkUpd()){
+                return $this->getUrl($code);
+            } else {
+                throw new \PDOException("URL já cadastrada");
+            }
+        } else {
+            throw new \PDOException("Erro ao executar a query");
         }
         return;
     }
 
+    public function checkUpd()
+    {
+        return ($this->db->rowCount()) > 0;
+    }
+
     public function listAllUrls()
     {
-        $sql = "SELECT code FROM url_links";
+        $sql = "SELECT * FROM url_links";
         $params = [];
         return $this->db->fetchAll($sql, $params);
     }

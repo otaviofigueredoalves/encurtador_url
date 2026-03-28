@@ -13,4 +13,10 @@ class HttpErrorsController extends Controller
         $this->log("Rota inexistente. Detalhe: $error_msg");
         $this->view('errors_pages/404');
     }
+    public function notServer($error_msg)
+    {
+        \http_response_code(500);
+        $this->log("Problema no servidor. Detalhe: $error_msg");
+        $this->view('errors_pages/500');
+    }
 }

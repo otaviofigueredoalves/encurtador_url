@@ -3,6 +3,7 @@ namespace App\Dev\Core;
 
 use App\Dev\Controllers\errors\HttpErrorsController;
 use App\Dev\Controllers\UrlController;
+use App\Dev\Traits\LoggerTrait;
 use Exception;
 
 class Router
@@ -10,15 +11,10 @@ class Router
     public function dispatch($url)
     {
         try{
-            $request = new Request();
-            if($request->method() === 'POST' && empty($request->input('url_input'))){
-                $this->httpError('notFound');
-                exit;
-            }
             $url = trim($url,'/');
             $parts = $url ? explode('/',$url) : [];
             // dd($parts);
-            $controller_name = $parts[0] ?? 'Home';
+            $controller_name = $parts[0] ?? 'Url';
             // dd($controller_name);
             $controller_name = 'App\Dev\Controllers\\'. ucfirst($controller_name).'Controller';
             // dd($controller_name);
@@ -36,14 +32,15 @@ class Router
             } else {
                 $controller = new UrlController();
                 $code = $parts[0];
-                // dd($code);
+                if($code != 'url'){
+                    $controller->redirect($code);
+                }
                 $controller->convert($code);
                 $this->httpError('notFound',$controller_name);
                 return;
             }
         } catch (\Exception $e){
-            // $this->httpError('notServer', $e->getMessage());
-            echo $e->getMessage();
+            $this->httpError('notServer', $e->getMessage());
         }
     }
 
