@@ -7,7 +7,7 @@ $lista_de_urls = __DIR__ . '/components/url_list.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kore Code - Encurtador</title>
+    <title>Encurtador de URL</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
