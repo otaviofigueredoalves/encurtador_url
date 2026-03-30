@@ -50,4 +50,14 @@ class UrlModel extends Model
         $params = [];
         return $this->db->fetchAll($sql, $params);
     }
+    
+    public function setCount($id)
+    {
+        $sql = "UPDATE url_links SET click_count = click_count + 1 WHERE id = :id";
+        $params = [
+            'id' => $id,
+        ];
+
+        return $this->db->query($sql, $params);
+    }
 }
