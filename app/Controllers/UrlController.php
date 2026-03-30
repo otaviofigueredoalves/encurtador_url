@@ -46,11 +46,18 @@ class UrlController extends Controller
 
         if(!empty($data)){
             $url_destino = $data['url']; 
+            $id = $data['id'];
+            $this->clickCount($id);
             Header("Location:".$url_destino, true, 301);
             exit;
         } else {
            return false;
         }
+    }
+
+    public function clickCount($id)
+    {
+        $this->UrlModel->setCount($id);
     }
 
     private function generateRandomCode($tamanho = 6)
